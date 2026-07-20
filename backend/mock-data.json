@@ -1,0 +1,57 @@
+[
+    {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "title": "Intro to REST APIs",
+        "subject": "Web Development",
+        "type": "link",
+        "url": "https://www.youtube.com/watch?v=lsMQRaeKNDk",
+        "note": "Great starter video, clear explanations of verbs and endpoints",
+        "likes": 18,
+        "dislikes": 3,
+        "createdAt": "2026-07-14T10:00:00Z"
+    },
+    {
+        "id": "660e8400-e29b-41d4-a716-446655440001",
+        "title": "Linear Algebra Basics",
+        "subject": "Math",
+        "type": "link",
+        "url": "https://www.khanacademy.org/math/linear-algebra",
+        "note": "Clean walk-through of matrices and vector spaces",
+        "likes": 22,
+        "dislikes": 1,
+        "createdAt": "2026-07-15T09:00:00Z"
+    },
+    {
+        "id": "770e8400-e29b-41d4-a716-446655440002",
+        "title": "DynamoDB Cheat Sheet",
+        "subject": "Databases",
+        "type": "file",
+        "url": "https://example-bucket.s3.us-east-1.amazonaws.com/uploads/dynamodb-cheat-sheet.pdf",
+        "note": "One-page PDF summary of partition keys and query patterns",
+        "likes": 15,
+        "dislikes": 0,
+        "createdAt": "2026-07-15T14:30:00Z"
+    },
+    {
+        "id": "880e8400-e29b-41d4-a716-446655440003",
+        "title": "Git Branching Explained",
+        "subject": "Tools",
+        "type": "link",
+        "url": "https://learngitbranching.js.org/",
+        "note": "Interactive visual explanation of branches, merges, and rebases",
+        "likes": 9,
+        "dislikes": 2,
+        "createdAt": "2026-07-16T11:00:00Z"
+    },
+    {
+        "id": "990e8400-e29b-41d4-a716-446655440004",
+        "title": "AWS VPC Fundamentals",
+        "subject": "Cloud Computing",
+        "type": "link",
+        "url": "https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html",
+        "note": "Official docs, useful before Sprint 2",
+        "likes": 12,
+        "dislikes": 1,
+        "createdAt": "2026-07-16T15:45:00Z"
+    }
+]
