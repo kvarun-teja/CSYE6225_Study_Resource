@@ -1,25 +1,16 @@
 {
-  "name": "csye6225-study-resource-backend",
+  "name": "backend",
   "version": "1.0.0",
-  "description": "Node.js/Express API for CSYE6225 Study Resource — auth slice",
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "overrides": {
-    "tar": "^7.5.22",
-    "brace-expansion": "^5.0.8",
-    "minimatch": "^10.2.5",
-    "glob": "^11.0.0",
-    "rimraf": "^6.0.0"
-  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.600.0",
-    "@aws-sdk/lib-dynamodb": "^3.600.0",
-    "bcrypt": "^5.1.1",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.1",
-    "jsonwebtoken": "^9.0.2"
+    "express": "^5.2.1"
   }
 }
