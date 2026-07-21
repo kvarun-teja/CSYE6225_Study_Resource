@@ -15,7 +15,7 @@ body {
 
 /* ---------- Header ---------- */
 .site-header {
-  background-color: #1f3864;
+  background-color: #2d2d2d;
   color: white;
   padding: 1rem 2rem;
   display: flex;
@@ -43,7 +43,7 @@ body {
 
 .page-title {
   font-size: 1.75rem;
-  color: #1f3864;
+  color: #2d2d2d;
   margin-bottom: 0.5rem;
 }
 
@@ -61,12 +61,12 @@ body {
 }
 
 .btn-primary {
-  background-color: #2563eb;
+  background-color: #d97858;
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: #1d4ed8;
+  background-color: #b86246;
 }
 
 .btn-secondary {
@@ -119,8 +119,8 @@ body {
 }
 
 .tag {
-  background-color: #e0e7ff;
-  color: #3730a3;
+  background-color: #fcece7;
+  color: #d97858;
   font-size: 0.75rem;
   font-weight: 500;
   padding: 0.2rem 0.6rem;
@@ -205,8 +205,8 @@ body {
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  border-color: #d97858;
+  box-shadow: 0 0 0 3px rgba(217, 120, 88, 0.15);
 }
 
 .form-group input[type="file"] {
