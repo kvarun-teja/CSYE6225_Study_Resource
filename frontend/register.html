@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — Study Resources</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Study Resources</h1>
+  </header>
+
+  <main class="container">
+    <h2 class="page-title">Create an Account</h2>
+    <p class="subtitle">Join the class study resource board.</p>
+
+    <form class="resource-form" id="register-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="At least 3 characters" required minlength="3">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="At least 8 characters" required minlength="8">
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Register</button>
+        <a href="login.html" class="btn btn-secondary">Already have an account?</a>
+      </div>
+
+      <p id="form-message" class="form-message"></p>
+    </form>
+  </main>
+
+  <script>
+    // Change this to the EC2 URL after deployment. Keep it in one place.
+    const API_BASE = "http://localhost:3000";
+
+    async function register(username, password) {
+      const res = await fetch(`${API_BASE}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // res.status is 400 (bad input) or 409 (username taken)
+        throw new Error(data.error || "Registration failed");
+      }
+
+      return data; // { userId, username }
+    }
+
+    function showMessage(text, type) {
+      const el = document.getElementById("form-message");
+      el.textContent = text;
+      el.className = `form-message ${type}`;
+    }
+
+    document.getElementById("register-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (username.length < 3) {
+        showMessage("Username must be at least 3 characters.", "error");
+        return;
+      }
+      if (password.length < 8) {
+        showMessage("Password must be at least 8 characters.", "error");
+        return;
+      }
+
+      try {
+        await register(username, password);
+        showMessage("Account created. Redirecting to login...", "success");
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 700);
+      } catch (err) {
+        showMessage(err.message, "error");
+      }
+    });
+  </script>
+</body>
+</html>

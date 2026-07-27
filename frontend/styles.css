@@ -248,3 +248,27 @@ body {
 .form-actions .btn-secondary:hover {
   background-color: #e5e7eb;
 }
+/* ---------- Auth pages (login/register) additions ---------- */
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+.form-group input[type="password"]:focus {
+  outline: none;
+  border-color: #d97858;
+  box-shadow: 0 0 0 3px rgba(217, 120, 88, 0.15);
+}
+.form-message {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+.form-message.error {
+  color: #b91c1c;
+}
+.form-message.success {
+  color: #15803d;
+}
