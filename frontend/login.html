@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In — Study Resources</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Study Resources</h1>
+  </header>
+
+  <main class="container">
+    <h2 class="page-title">Log In</h2>
+    <p class="subtitle">Welcome back. Log in to view and share resources.</p>
+
+    <form class="resource-form" id="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Your username" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Your password" required>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Log In</button>
+        <a href="register.html" class="btn btn-secondary">Create an account</a>
+      </div>
+
+      <p id="form-message" class="form-message"></p>
+    </form>
+  </main>
+
+  <script>
+    // Change this to the EC2 URL after deployment. Keep it in one place.
+    const API_BASE = "http://localhost:3000";
+
+    async function login(username, password) {
+      const res = await fetch(`${API_BASE}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // res.status is 401 for invalid credentials
+        throw new Error(data.error || "Login failed");
+      }
+
+      // Store the token so the user stays logged in across pages
+      sessionStorage.setItem("token", data.token);
+      return data;
+    }
+
+    function isLoggedIn() {
+      return sessionStorage.getItem("token") !== null;
+    }
+
+    function showMessage(text, type) {
+      const el = document.getElementById("form-message");
+      el.textContent = text;
+      el.className = `form-message ${type}`;
+    }
+
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        await login(username, password);
+        showMessage("Login successful. Redirecting...", "success");
+        setTimeout(() => {
+          window.location.href = "home.html";
+        }, 500);
+      } catch (err) {
+        showMessage(err.message, "error");
+      }
+    });
+
+    // If already logged in, skip straight to home
+    if (isLoggedIn()) {
+      window.location.href = "home.html";
+    }
+  </script>
+</body>
+</html>
