@@ -36,8 +36,9 @@
   </main>
 
   <script>
-    // Change this to the EC2 URL after deployment. Keep it in one place.
-    const API_BASE = "http://localhost:3000";
+    // Empty string = same-origin. The backend now serves this page itself,
+    // so /login is always on the same host/port — no per-deployment URL to update.
+    const API_BASE = "";
 
     async function login(username, password) {
       const res = await fetch(`${API_BASE}/login`, {

@@ -2,6 +2,8 @@
 
 REST API for CSYE6225 Study Resource. This slice owns user registration and login, and issues JWTs that every other endpoint must verify. If you are building a protected endpoint (resources, voting, etc.), skip to [Using authMiddleware.js](#using-authmiddlewarejs).
 
+**The backend also serves the frontend.** `server.js` serves the sibling `frontend/` directory as static files, with `home.html` as the default index. Visiting the EC2 URL directly (no path) loads the site — there's no separate frontend host/deployment.
+
 ---
 
 ## Requirements
