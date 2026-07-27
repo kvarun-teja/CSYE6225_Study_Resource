@@ -1,16 +1,18 @@
-const express = require('express');
-const app = express();
-const PORT = 3000;
+'use strict';
 
-// Parse JSON request bodies
+// dotenv must be loaded before any other local require so that config.js
+// reads the populated process.env.
+require('dotenv').config();
+
+const express = require('express');
+const { PORT } = require('./config');
+const authRoutes = require('./routes/auth');
+
+const app = express();
 app.use(express.json());
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
-});
+app.use('/', authRoutes);
 
-// Start the server
 app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
+  console.log(`Backend listening on port ${PORT}`);
 });
