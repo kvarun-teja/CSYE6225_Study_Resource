@@ -19,7 +19,6 @@ Returns every resource in the database, sorted by like count descending.
     "id": "abc-123",
     "title": "Intro to REST APIs",
     "subject": "Web Development",
-    "type": "link",
     "url": "https://example.com/rest-intro",
     "note": "Great starter video",
     "likes": 18,
@@ -29,27 +28,30 @@ Returns every resource in the database, sorted by like count descending.
 ]
 ```
 
+For any item with an uploaded file, `fileUrl` is a freshly generated, time-limited presigned S3 URL (regenerated on every `GET /resources` call, so it never goes stale).
+
 ---
 
 ## 2. Create a resource
 
 **`POST /resources`**
 
-Adds a new resource. Called from the Add Resource form.
+Adds a new resource. Called from the Add Resource form. A resource needs a `url`, a file, or both — subject is free text (no fixed list).
 
-### Request body
+### Request body — link only (`application/json`)
 
 ```json
 {
   "title": "Intro to REST APIs",
   "subject": "Web Development",
-  "type": "link",
   "url": "https://example.com/rest-intro",
   "note": "Great starter video"
 }
 ```
 
-For file-type resources, `url` is the S3 URL returned after uploading the file (Sprint 3).
+### Request body — file (or file + link) upload (`multipart/form-data`)
+
+Fields: `title`, `subject`, `note` (optional), `url` (optional), `file` (the binary upload). Sent as `multipart/form-data` since it includes a binary file.
 
 ### Response — 201 Created
 
@@ -58,7 +60,6 @@ For file-type resources, `url` is the S3 URL returned after uploading the file (
   "id": "abc-123",
   "title": "Intro to REST APIs",
   "subject": "Web Development",
-  "type": "link",
   "url": "https://example.com/rest-intro",
   "note": "Great starter video",
   "likes": 0,

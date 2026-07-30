@@ -4,80 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Study Resources</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,400;1,600&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=2">
 </head>
-<body>
+<body class="split-view">
   <header class="site-header">
-    <h1>Study Resources</h1>
-    <a href="add.html" class="btn btn-primary">+ Add Resource</a>
+    <div class="site-heading">
+      <span class="site-kicker">CSYE 6225 &middot; Class Archive</span>
+      <h1>Study Resources</h1>
+      <svg class="squiggle" viewBox="0 0 150 10"><path d="M2 6 Q 14 -2, 26 6 T 50 6 T 74 6 T 98 6 T 122 6 T 148 6"/></svg>
+    </div>
+    <a href="add.html" class="btn btn-primary">&#43; Add resource</a>
   </header>
 
   <main class="container">
-    <p class="subtitle">Study links and files shared by the class. Vote on what actually helped.</p>
+    <p class="subtitle">Study links and files shared by the class &mdash; vote on what actually helped.</p>
 
-    <section class="card-list">
+    <div class="layout">
+      <div class="list-pane" id="list-pane">
+        <form class="search-bar" id="search-form">
+          <input type="text" id="search-input" placeholder="Search by subject&hellip; a word, or a whole sentence works too">
+          <button type="submit" class="btn btn-open">Search</button>
+          <button type="button" class="btn btn-secondary-outline" id="search-clear">Clear</button>
+        </form>
 
-      <article class="card">
-        <div class="card-header">
-          <h2 class="card-title">Intro to REST APIs</h2>
-          <span class="tag">Web Development</span>
-        </div>
-        <p class="card-note">Great starter video, explains verbs and endpoints clearly.</p>
-        <div class="card-footer">
-          <div class="votes">
-            <button class="vote-btn like">👍 18</button>
-            <button class="vote-btn dislike">👎 3</button>
-          </div>
-          <a href="#" class="btn btn-open">Open link</a>
-        </div>
-      </article>
+        <p id="status-message" class="status-message" style="display: none;"></p>
 
-      <article class="card">
-        <div class="card-header">
-          <h2 class="card-title">Linear Algebra Basics</h2>
-          <span class="tag">Math</span>
-        </div>
-        <p class="card-note">Clean walk-through of matrices and vector spaces.</p>
-        <div class="card-footer">
-          <div class="votes">
-            <button class="vote-btn like">👍 22</button>
-            <button class="vote-btn dislike">👎 1</button>
-          </div>
-          <a href="#" class="btn btn-open">Open link</a>
-        </div>
-      </article>
+        <section class="card-list" id="card-list"></section>
 
-      <article class="card">
-        <div class="card-header">
-          <h2 class="card-title">DynamoDB Cheat Sheet</h2>
-          <span class="tag">Databases</span>
-        </div>
-        <p class="card-note">One-page PDF summary of partition keys and query patterns.</p>
-        <div class="card-footer">
-          <div class="votes">
-            <button class="vote-btn like">👍 15</button>
-            <button class="vote-btn dislike">👎 0</button>
-          </div>
-          <a href="#" class="btn btn-open">Download file</a>
-        </div>
-      </article>
+        <footer class="site-footer">
+          <p>Made by the class, for the class</p>
+        </footer>
+      </div>
 
-      <article class="card">
-        <div class="card-header">
-          <h2 class="card-title">Git Branching Explained</h2>
-          <span class="tag">Tools</span>
+      <aside class="detail-pane" id="detail-pane">
+        <div id="detail-body">
+          <p class="detail-placeholder">Select a resource from the list to see its details here.</p>
         </div>
-        <p class="card-note">Visual explanation of branches, merges, and rebases.</p>
-        <div class="card-footer">
-          <div class="votes">
-            <button class="vote-btn like">👍 9</button>
-            <button class="vote-btn dislike">👎 2</button>
-          </div>
-          <a href="#" class="btn btn-open">Open link</a>
-        </div>
-      </article>
-
-    </section>
+      </aside>
+    </div>
   </main>
+
+  <script src="config.js?v=2"></script>
+  <script src="header.js?v=1"></script>
+  <script src="home.js?v=2"></script>
 </body>
 </html>

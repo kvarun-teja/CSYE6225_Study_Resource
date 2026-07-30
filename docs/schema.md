@@ -25,36 +25,30 @@ There is no sort key. Every item is identified by its `id` alone.
 |---|---|---|---|
 | `id` | String | yes | UUID v4 |
 | `title` | String | yes | 1–100 characters |
-| `subject` | String | yes | One of the fixed subject values (see below) |
-| `type` | String | yes | Either `"link"` or `"file"` |
-| `url` | String | yes | For `link` type: the web URL. For `file` type: the S3 object URL. |
+| `subject` | String | yes | Free text, 1–50 characters — no fixed list |
+| `url` | String | no | The web link, if one was provided |
+| `fileUrl` | String | no | Presigned S3 URL for the uploaded file, if one was provided |
+| `s3Key` | String | no | Internal S3 object key backing `fileUrl`, used to re-sign it on read |
 | `note` | String | no | Optional short description, up to 200 characters |
 | `likes` | Number | yes | Starts at 0. Incremented atomically. |
 | `dislikes` | Number | yes | Starts at 0. Incremented atomically. |
 | `createdAt` | String | yes | ISO 8601 timestamp in UTC |
 
+At least one of `url` / `fileUrl` is always present — a resource can be a link, an uploaded file, or both. There is no `type` field; the frontend renders based on which of `url`/`fileUrl` exist on the item.
+
 ## Subject values
 
-Fixed list, matching the Add Resource form dropdown:
-
-- `Math`
-- `Web Development`
-- `Databases`
-- `Cloud Computing`
-- `Programming`
-- `Tools`
-- `Other`
+Free text — whatever the user types (e.g. "Math", "Web Development", or anything else), 1–50 characters.
 
 ---
 
-## Sample item
+## Sample item — link only
 
 ```json
 {
   "id": "550e8400-e29b-41d4-a716-446655440000",
   "title": "Intro to REST APIs",
   "subject": "Web Development",
-  "type": "link",
   "url": "https://example.com/rest-intro",
   "note": "Great starter video",
   "likes": 18,
@@ -63,12 +57,35 @@ Fixed list, matching the Add Resource form dropdown:
 }
 ```
 
-## Sample item — file type
+## Sample item — file only
 
 ```json
 {
   "id": "660e8400-e29b-41d4-a716-446655440001",
   "title": "DynamoDB Cheat Sheet",
   "subject": "Databases",
-  "type": "file",
-  "url": "https://study-resources-bucket.s3.us-east-1.amazonaws.com/uploads/dynamodb-cheat-sheet.pdf",
+  "s3Key": "uploads/dynamodb-cheat-sheet.pdf",
+  "fileUrl": "https://study-resources-bucket.s3.us-east-1.amazonaws.com/uploads/dynamodb-cheat-sheet.pdf",
+  "note": "One-page PDF summary of partition keys and query patterns",
+  "likes": 15,
+  "dislikes": 0,
+  "createdAt": "2026-07-15T14:30:00Z"
+}
+```
+
+## Sample item — link and file together
+
+```json
+{
+  "id": "770e8400-e29b-41d4-a716-446655440002",
+  "title": "Cloud Computing Midterm Notes",
+  "subject": "Cloud Computing",
+  "url": "https://example.com/midterm-review-video",
+  "s3Key": "uploads/midterm-notes.pdf",
+  "fileUrl": "https://study-resources-bucket.s3.us-east-1.amazonaws.com/uploads/midterm-notes.pdf",
+  "note": "Video walkthrough plus my written notes",
+  "likes": 4,
+  "dislikes": 0,
+  "createdAt": "2026-07-20T09:00:00Z"
+}
+```

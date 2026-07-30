@@ -24,42 +24,40 @@ but the backend never trusts the frontend.
 ### `subject`
 
 - Required
-- Type: string
-- Must be one of the fixed values:
-  `Math`, `Web Development`, `Databases`, `Cloud Computing`, `Programming`, `Tools`, `Other`
+- Type: string, free text (no fixed list — the user can type anything, e.g. "Math" or a course code)
+- Length: 1–50 characters
+- Whitespace trimmed
 - Errors:
-  - Missing: `"Subject is required"`
-  - Not in list: `"Subject must be one of the allowed values"`
+  - Missing or empty: `"Subject is required"`
+  - Too long: `"Subject must be 50 characters or fewer"`
 
-### `type`
+### `url` and file — at least one required
 
-- Required
-- Type: string
-- Must be exactly `"link"` or `"file"`
-- Errors:
-  - Missing or invalid: `"Type must be 'link' or 'file'"`
+A resource can have a link, an uploaded file, or both. There is no `type` field anymore.
+
+- If neither a `url` nor a file is present: `"Please provide a URL, upload a file, or both"`
 
 ### `url`
 
-- Required if `type` is `"link"` — must be a valid `http://` or `https://` URL
-- Required if `type` is `"file"` — must be a valid `https://` S3 URL returned by the upload endpoint (Sprint 3)
+- Optional — only validated if provided
+- Must be a valid `http://` or `https://` URL
 - Errors:
-  - Missing: `"URL is required"`
   - Malformed: `"URL must start with http:// or https://"`
 
 ### `note`
 
 - Optional
-- Type: string
-- Length: up to 200 characters
+- Type: string, free-form (multiple paragraphs are fine — line breaks are preserved when displayed)
+- Length: up to 2000 characters
 - Whitespace trimmed
 - Errors:
-  - Too long: `"Note must be 200 characters or fewer"`
+  - Too long: `"Note must be 2000 characters or fewer"`
 
-### File uploads (Sprint 3)
+### File uploads
 
-Enforced by the upload endpoint, not `POST /resources`:
+Sent as `multipart/form-data` in the same `POST /resources` request (not a separate endpoint):
 
+- Optional — only validated if a file is attached
 - Maximum file size: 25 MB
 - Allowed MIME types: `application/pdf`, `application/msword`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`, `video/mp4`
 - Allowed extensions: `.pdf`, `.doc`, `.docx`, `.mp4`
