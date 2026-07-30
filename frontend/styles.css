@@ -498,6 +498,7 @@ body.split-view .container {
 
 .form-group input[type="text"],
 .form-group input[type="url"],
+.form-group input[type="password"],
 .form-group select {
   width: 100%;
   padding: 0.6rem 0.1rem;
@@ -766,4 +767,21 @@ body.split-view .container {
   .resource-form {
     padding: 1.75rem 1.5rem;
   }
+}
+
+/* ---------- Auth pages (login/register) ---------- */
+/* Password fields pick up the shared input styling above; these are the
+   login/register-only additions, themed to the site palette. */
+.form-message {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  margin-top: 1rem;
+}
+
+.form-message.error {
+  color: var(--accent-deep);
+}
+
+.form-message.success {
+  color: var(--good);
 }

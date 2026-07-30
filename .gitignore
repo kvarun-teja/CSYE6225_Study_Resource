@@ -1,2 +1,7 @@
 .DS_Store
 node_modules/
+
+# Never commit real secrets — only .env.example is safe to commit
+.env
+*.env
+!.env.example

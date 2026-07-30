@@ -1,15 +1,20 @@
+'use strict';
+
+require('dotenv').config();
+
 const fs = require('fs');
 const path = require('path');
 const { PutCommand } = require('@aws-sdk/lib-dynamodb');
-const { docClient, TABLE_NAME } = require('./db');
+const docClient = require('./db');
+const { RESOURCES_TABLE } = require('./config');
 
 async function seed() {
   const items = JSON.parse(fs.readFileSync(path.join(__dirname, 'mock-data.json'), 'utf8'));
   for (const item of items) {
-    await docClient.send(new PutCommand({ TableName: TABLE_NAME, Item: item }));
+    await docClient.send(new PutCommand({ TableName: RESOURCES_TABLE, Item: item }));
     console.log(`Seeded: ${item.title}`);
   }
-  console.log(`Done — ${items.length} items written to ${TABLE_NAME}`);
+  console.log(`Done — ${items.length} items written to ${RESOURCES_TABLE}`);
 }
 
 seed().catch((err) => {

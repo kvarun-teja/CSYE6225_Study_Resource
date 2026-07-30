@@ -248,7 +248,7 @@ async function loadResources() {
     allResources = await res.json();
     applySearch();
   } catch (err) {
-    statusMessage.textContent = 'Could not load resources. Is the backend running on http://localhost:3000?';
+    statusMessage.textContent = 'Could not load resources. Is the server running?';
     statusMessage.style.display = 'block';
     console.error(err);
   }

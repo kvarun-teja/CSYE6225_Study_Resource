@@ -62,7 +62,7 @@ form.addEventListener('submit', async (event) => {
 
     window.location.href = 'home.html';
   } catch (err) {
-    showError('Could not reach the server. Is the backend running on http://localhost:3000?');
+    showError('Could not reach the server. Is the server running?');
     console.error(err);
   } finally {
     submitBtn.disabled = false;
