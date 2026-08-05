@@ -8,6 +8,7 @@ const { ScanCommand, PutCommand, UpdateCommand } = require('@aws-sdk/lib-dynamod
 const docClient = require('../db');
 const { RESOURCES_TABLE } = require('../config');
 const { uploadFile, presignedUrl } = require('../s3');
+const authMiddleware = require('../authMiddleware');
 const {
   validateTitle,
   validateSubject,
@@ -47,7 +48,7 @@ router.get('/resources', async (req, res, next) => {
 });
 
 // POST /resources — create a resource (JSON body for links, multipart when a file is attached)
-router.post('/resources', (req, res, next) => {
+router.post('/resources', authMiddleware, (req, res, next) => {
   upload.single('file')(req, res, (err) => {
     if (err) {
       if (err.code === 'LIMIT_FILE_SIZE') {
@@ -126,7 +127,7 @@ async function castVote(field, req, res, next) {
   }
 }
 
-router.post('/resources/:id/like', (req, res, next) => castVote('likes', req, res, next));
-router.post('/resources/:id/dislike', (req, res, next) => castVote('dislikes', req, res, next));
+router.post('/resources/:id/like', authMiddleware, (req, res, next) => castVote('likes', req, res, next));
+router.post('/resources/:id/dislike', authMiddleware, (req, res, next) => castVote('dislikes', req, res, next));
 
 module.exports = router;

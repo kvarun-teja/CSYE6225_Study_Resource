@@ -16,7 +16,10 @@
       <h1>Study Resources</h1>
       <svg class="squiggle" viewBox="0 0 150 10"><path d="M2 6 Q 14 -2, 26 6 T 50 6 T 74 6 T 98 6 T 122 6 T 148 6"/></svg>
     </div>
-    <a href="add.html" class="btn btn-primary">&#43; Add resource</a>
+    <div class="header-actions" style="display: flex; align-items: center; gap: 0.75rem;">
+      <a href="add.html" id="add-resource-link" class="btn btn-primary">&#43; Add resource</a>
+      <span id="auth-control"></span>
+    </div>
   </header>
 
   <main class="container">
@@ -48,6 +51,7 @@
   </main>
 
   <script src="config.js?v=2"></script>
+  <script src="auth.js?v=1"></script>
   <script src="header.js?v=1"></script>
   <script src="home.js?v=2"></script>
 </body>

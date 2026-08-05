@@ -100,10 +100,23 @@ function selectCard(cardEl, resource) {
 }
 
 async function castVote(id, kind, likeBtn, dislikeBtn) {
+  if (!isLoggedIn()) {
+    window.location.href = 'login.html';
+    return;
+  }
+
   likeBtn.disabled = true;
   dislikeBtn.disabled = true;
   try {
-    const res = await fetch(`${API_BASE}/resources/${id}/${kind}`, { method: 'POST' });
+    const res = await fetch(`${API_BASE}/resources/${id}/${kind}`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+    if (res.status === 401) {
+      logout();
+      window.location.href = 'login.html';
+      return;
+    }
     if (!res.ok) throw new Error(`Vote failed with status ${res.status}`);
     const data = await res.json();
     likeBtn.textContent = `\u{1F44D} ${data.likes}`;
@@ -254,5 +267,14 @@ async function loadResources() {
   }
 }
 
+const addResourceLink = document.getElementById('add-resource-link');
+addResourceLink.addEventListener('click', (event) => {
+  if (!isLoggedIn()) {
+    event.preventDefault();
+    window.location.href = 'login.html';
+  }
+});
+
 loadResources();
+renderAuthControl();
 initHeaderShrink([document.getElementById('list-pane'), document.getElementById('detail-pane')]);

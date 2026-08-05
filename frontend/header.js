@@ -22,3 +22,31 @@ function initHeaderShrink(sources) {
 
   update();
 }
+
+// Fills the #auth-control placeholder in the header with a "Log in" link
+// (logged out) or a "Log out" button (logged in). Relies on isLoggedIn()/
+// logout() from auth.js, which must be loaded first.
+function renderAuthControl() {
+  const container = document.getElementById('auth-control');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  if (isLoggedIn()) {
+    const logoutBtn = document.createElement('button');
+    logoutBtn.type = 'button';
+    logoutBtn.className = 'btn btn-secondary';
+    logoutBtn.textContent = 'Log out';
+    logoutBtn.addEventListener('click', () => {
+      logout();
+      window.location.href = 'home.html';
+    });
+    container.append(logoutBtn);
+  } else {
+    const loginLink = document.createElement('a');
+    loginLink.href = 'login.html';
+    loginLink.className = 'btn btn-secondary';
+    loginLink.textContent = 'Log in';
+    container.append(loginLink);
+  }
+}

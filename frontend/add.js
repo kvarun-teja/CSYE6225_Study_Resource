@@ -3,6 +3,7 @@ const errorMessage = document.getElementById('form-error');
 const submitBtn = form.querySelector('button[type="submit"]');
 
 initHeaderShrink([window]);
+renderAuthControl();
 
 function showError(message) {
   errorMessage.textContent = message;
@@ -39,11 +40,15 @@ form.addEventListener('submit', async (event) => {
       if (hasUrl) formData.append('url', form.url.value);
       formData.append('file', fileInput.files[0]);
 
-      res = await fetch(`${API_BASE}/resources`, { method: 'POST', body: formData });
+      res = await fetch(`${API_BASE}/resources`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${getToken()}` },
+        body: formData,
+      });
     } else {
       res = await fetch(`${API_BASE}/resources`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
         body: JSON.stringify({
           title: form.title.value,
           subject: form.subject.value,
@@ -51,6 +56,12 @@ form.addEventListener('submit', async (event) => {
           note: form.note.value,
         }),
       });
+    }
+
+    if (res.status === 401) {
+      logout();
+      window.location.href = 'login.html';
+      return;
     }
 
     const data = await res.json();
