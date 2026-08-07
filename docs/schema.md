@@ -29,9 +29,10 @@ There is no sort key. Every item is identified by its `id` alone.
 | `url` | String | no | The web link, if one was provided |
 | `fileUrl` | String | no | Presigned S3 URL for the uploaded file, if one was provided |
 | `s3Key` | String | no | Internal S3 object key backing `fileUrl`, used to re-sign it on read |
-| `note` | String | no | Optional short description, up to 200 characters |
+| `note` | String | no | Optional short description, up to 2000 characters |
 | `likes` | Number | yes | Starts at 0. Incremented atomically. |
 | `dislikes` | Number | yes | Starts at 0. Incremented atomically. |
+| `createdBy` | String | yes | Username of the authenticated user who created the resource (from the JWT, via `authMiddleware`) |
 | `createdAt` | String | yes | ISO 8601 timestamp in UTC |
 
 At least one of `url` / `fileUrl` is always present — a resource can be a link, an uploaded file, or both. There is no `type` field; the frontend renders based on which of `url`/`fileUrl` exist on the item.
@@ -53,6 +54,7 @@ Free text — whatever the user types (e.g. "Math", "Web Development", or anythi
   "note": "Great starter video",
   "likes": 18,
   "dislikes": 3,
+  "createdBy": "varun123",
   "createdAt": "2026-07-14T10:00:00Z"
 }
 ```
@@ -69,6 +71,7 @@ Free text — whatever the user types (e.g. "Math", "Web Development", or anythi
   "note": "One-page PDF summary of partition keys and query patterns",
   "likes": 15,
   "dislikes": 0,
+  "createdBy": "varun123",
   "createdAt": "2026-07-15T14:30:00Z"
 }
 ```
@@ -86,6 +89,7 @@ Free text — whatever the user types (e.g. "Math", "Web Development", or anythi
   "note": "Video walkthrough plus my written notes",
   "likes": 4,
   "dislikes": 0,
+  "createdBy": "varun123",
   "createdAt": "2026-07-20T09:00:00Z"
 }
 ```

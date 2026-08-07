@@ -95,6 +95,7 @@ async function createResource(req, res, next) {
       note: typeof body.note === 'string' ? body.note.trim().replace(/\r\n/g, '\n') : '',
       likes: 0,
       dislikes: 0,
+      createdBy: req.user.username,
       createdAt: new Date().toISOString(),
     };
 
