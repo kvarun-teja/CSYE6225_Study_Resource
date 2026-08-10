@@ -62,19 +62,19 @@ function createCard(resource) {
 
   const likeBtn = document.createElement('button');
   likeBtn.className = 'vote-btn like';
-  likeBtn.textContent = `\u{1F44D} ${resource.likes}`;
 
   const dislikeBtn = document.createElement('button');
   dislikeBtn.className = 'vote-btn dislike';
-  dislikeBtn.textContent = `\u{1F44E} ${resource.dislikes}`;
+
+  renderVotes(likeBtn, dislikeBtn, resource);
 
   likeBtn.addEventListener('click', (event) => {
     event.stopPropagation();
-    castVote(resource.id, 'like', likeBtn, dislikeBtn);
+    castVote(resource, 'like', likeBtn, dislikeBtn);
   });
   dislikeBtn.addEventListener('click', (event) => {
     event.stopPropagation();
-    castVote(resource.id, 'dislike', likeBtn, dislikeBtn);
+    castVote(resource, 'dislike', likeBtn, dislikeBtn);
   });
 
   votes.append(likeBtn, dislikeBtn);
@@ -99,7 +99,17 @@ function selectCard(cardEl, resource) {
   showDetail(resource);
 }
 
-async function castVote(id, kind, likeBtn, dislikeBtn) {
+// Paints the counts and marks whichever button holds this user's vote.
+function renderVotes(likeBtn, dislikeBtn, resource) {
+  likeBtn.textContent = `\u{1F44D} ${resource.likes}`;
+  dislikeBtn.textContent = `\u{1F44E} ${resource.dislikes}`;
+  likeBtn.classList.toggle('voted', resource.myVote === 'like');
+  dislikeBtn.classList.toggle('voted', resource.myVote === 'dislike');
+  likeBtn.title = resource.myVote === 'like' ? 'Click again to remove your like' : 'Like';
+  dislikeBtn.title = resource.myVote === 'dislike' ? 'Click again to remove your dislike' : 'Dislike';
+}
+
+async function castVote(resource, choice, likeBtn, dislikeBtn) {
   if (!isLoggedIn()) {
     window.location.href = 'login.html';
     return;
@@ -108,7 +118,7 @@ async function castVote(id, kind, likeBtn, dislikeBtn) {
   likeBtn.disabled = true;
   dislikeBtn.disabled = true;
   try {
-    const res = await fetch(`${API_BASE}/resources/${id}/${kind}`, {
+    const res = await fetch(`${API_BASE}/resources/${resource.id}/${choice}`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${getToken()}` },
     });
@@ -119,8 +129,13 @@ async function castVote(id, kind, likeBtn, dislikeBtn) {
     }
     if (!res.ok) throw new Error(`Vote failed with status ${res.status}`);
     const data = await res.json();
-    likeBtn.textContent = `\u{1F44D} ${data.likes}`;
-    dislikeBtn.textContent = `\u{1F44E} ${data.dislikes}`;
+
+    // Keep the cached copy in step so re-rendering (search, re-sort) doesn't
+    // fall back to stale counts or lose the highlight.
+    resource.likes = data.likes;
+    resource.dislikes = data.dislikes;
+    resource.myVote = data.myVote;
+    renderVotes(likeBtn, dislikeBtn, resource);
   } catch (err) {
     console.error(err);
   } finally {
@@ -256,7 +271,11 @@ searchClear.addEventListener('click', () => {
 
 async function loadResources() {
   try {
-    const res = await fetch(`${API_BASE}/resources`);
+    // Browsing works logged out; sending the token when we have one is what
+    // lets the server tell us which resources this user has already voted on.
+    const res = await fetch(`${API_BASE}/resources`, {
+      headers: isLoggedIn() ? { Authorization: `Bearer ${getToken()}` } : {},
+    });
     if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
     allResources = await res.json();
     applySearch();

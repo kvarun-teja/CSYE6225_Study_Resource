@@ -41,4 +41,28 @@ function authMiddleware(req, res, next) {
   }
 }
 
+/**
+ * Same verification, but never rejects. Attaches req.user when a valid Bearer
+ * token is present and leaves it undefined otherwise — for endpoints that stay
+ * public but tailor their response to the caller (e.g. GET /resources needs to
+ * know which way you voted, without forcing you to log in to browse).
+ */
+function optionalAuth(req, _res, next) {
+  const authHeader = req.headers.authorization;
+
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      const decoded = jwt.verify(authHeader.slice(7), JWT_SECRET);
+      req.user = { userId: decoded.userId, username: decoded.username };
+    } catch (_err) {
+      // Ignore a bad or expired token here — the caller is simply anonymous.
+    }
+  }
+
+  next();
+}
+
 module.exports = authMiddleware;
+// Attached as a property so existing `require('./authMiddleware')` call sites,
+// which expect the function itself, keep working unchanged.
+module.exports.optional = optionalAuth;

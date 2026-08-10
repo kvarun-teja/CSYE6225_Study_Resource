@@ -471,6 +471,30 @@ body.split-view .container {
   color: var(--accent-deep);
 }
 
+/* The button holding this user's vote: filled in and pressed down, so it reads
+   as "on" rather than just hovered. Click it again to withdraw the vote. */
+.vote-btn.voted {
+  font-weight: 600;
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.vote-btn.like.voted {
+  background-color: var(--good-bg);
+  border-color: var(--good);
+  color: var(--good);
+}
+
+.vote-btn.dislike.voted {
+  background-color: var(--bad-bg);
+  border-color: var(--accent-deep);
+  color: var(--accent-deep);
+}
+
+.vote-btn.voted:hover {
+  transform: translate(2px, 2px);
+}
+
 /* ---------- Form ---------- */
 .resource-form {
   background-color: var(--paper-warm);

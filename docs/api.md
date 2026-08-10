@@ -5,11 +5,34 @@ All endpoints return JSON. Base URL is `http://localhost:3000` in development.
 
 ---
 
+## Authentication
+
+`POST /register` and `POST /login` create an account and exchange credentials
+for a JWT (see `backend/routes/auth.js`). Send it on protected calls:
+
+```
+Authorization: Bearer <token>
+```
+
+| Endpoint | Access |
+|---|---|
+| `POST /register`, `POST /login`, `GET /health` | public |
+| `GET /resources` | public, but **auth-aware** — see below |
+| `POST /resources`, `POST /resources/:id/like`, `POST /resources/:id/dislike` | **token required** |
+
+A protected call without a valid token returns `401 { "error": "Unauthorized" }`.
+Tokens expire after 24 hours.
+
+---
+
 ## 1. Get all resources
 
 **`GET /resources`**
 
 Returns every resource in the database, sorted by like count descending.
+
+Public, so browsing needs no account. If a valid token *is* sent, each item also
+carries `myVote`, telling the caller how they voted on that resource.
 
 ### Response — 200 OK
 
@@ -23,10 +46,16 @@ Returns every resource in the database, sorted by like count descending.
     "note": "Great starter video",
     "likes": 18,
     "dislikes": 3,
+    "myVote": "like",
+    "createdBy": "varun123",
     "createdAt": "2026-07-14T10:00:00Z"
   }
 ]
 ```
+
+`myVote` is `"like"`, `"dislike"`, or `null` — always `null` when the request is
+anonymous. The underlying `voters` map is **never** returned; callers only ever
+learn their own vote.
 
 For any item with an uploaded file, `fileUrl` is a freshly generated, time-limited presigned S3 URL (regenerated on every `GET /resources` call, so it never goes stale).
 
@@ -80,41 +109,49 @@ Returned when the payload fails validation (see `docs/validation.md`).
 
 ## 3. Like a resource
 
-**`POST /resources/:id/like`**
+**`POST /resources/:id/like`** — token required. No request body.
 
-Increments the like count for a resource. No request body needed.
+A user holds **at most one vote per resource**. This endpoint is a toggle, not a
+counter bump:
+
+| Your vote before | Result |
+|---|---|
+| none | vote recorded, `likes` +1 |
+| already `like` | vote withdrawn, `likes` −1 |
+| `dislike` | switched — `likes` +1, `dislikes` −1 |
 
 ### Response — 200 OK
 
 ```json
-{ "id": "abc-123", "likes": 19, "dislikes": 3 }
+{ "id": "abc-123", "likes": 19, "dislikes": 3, "myVote": "like" }
 ```
 
-### Error — 404 Not Found
+`myVote` is `null` when the click withdrew the vote.
 
-```json
-{ "error": "Resource not found" }
-```
+### Errors
+
+| Status | Body | When |
+|---|---|---|
+| 401 | `{ "error": "Unauthorized" }` | missing or invalid token |
+| 404 | `{ "error": "Resource not found" }` | no resource with that id |
+| 409 | `{ "error": "Vote conflicted, please try again" }` | same user voting concurrently; retry |
 
 ---
 
 ## 4. Dislike a resource
 
-**`POST /resources/:id/dislike`**
+**`POST /resources/:id/dislike`** — token required. No request body.
 
-Increments the dislike count. Same shape as the like endpoint.
+Identical to the like endpoint with the counters swapped: it records, withdraws,
+or switches your vote.
 
 ### Response — 200 OK
 
 ```json
-{ "id": "abc-123", "likes": 18, "dislikes": 4 }
+{ "id": "abc-123", "likes": 18, "dislikes": 4, "myVote": "dislike" }
 ```
 
-### Error — 404 Not Found
-
-```json
-{ "error": "Resource not found" }
-```
+Same error responses as above.
 
 ---
 

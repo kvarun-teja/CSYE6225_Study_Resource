@@ -30,12 +30,33 @@ There is no sort key. Every item is identified by its `id` alone.
 | `fileUrl` | String | no | Presigned S3 URL for the uploaded file, if one was provided |
 | `s3Key` | String | no | Internal S3 object key backing `fileUrl`, used to re-sign it on read |
 | `note` | String | no | Optional short description, up to 2000 characters |
-| `likes` | Number | yes | Starts at 0. Incremented atomically. |
-| `dislikes` | Number | yes | Starts at 0. Incremented atomically. |
+| `likes` | Number | yes | Starts at 0. Always equals the number of `like` entries in `voters`. |
+| `dislikes` | Number | yes | Starts at 0. Always equals the number of `dislike` entries in `voters`. |
+| `voters` | Map | yes | `{ username: "like" \| "dislike" }` — one entry per user who has voted. Never returned by the API. |
 | `createdBy` | String | yes | Username of the authenticated user who created the resource (from the JWT, via `authMiddleware`) |
 | `createdAt` | String | yes | ISO 8601 timestamp in UTC |
 
 At least one of `url` / `fileUrl` is always present — a resource can be a link, an uploaded file, or both. There is no `type` field; the frontend renders based on which of `url`/`fileUrl` exist on the item.
+
+## Voting
+
+`voters` is what makes a vote belong to a person rather than being an anonymous
+counter. It holds at most one entry per user, so nobody can like the same
+resource twice, and nobody can like and dislike it at the same time.
+
+| Action | Effect |
+|---|---|
+| Like a resource you haven't voted on | `voters[you] = "like"`, `likes` +1 |
+| Like a resource you already liked | entry removed, `likes` −1 (vote withdrawn) |
+| Like a resource you had disliked | `voters[you] = "like"`, `likes` +1 and `dislikes` −1 |
+
+Dislike behaves the same way with the counters swapped. The map entry and the
+counters are changed in a single conditional write, so they cannot drift apart
+even if the same user clicks twice at once.
+
+Rows created before this attribute existed simply have no `voters` map; the
+backend creates an empty one the first time someone votes on them. Their
+pre-existing counts are left alone.
 
 ## Subject values
 
